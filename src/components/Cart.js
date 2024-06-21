@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import '../components/styles/Cart.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,6 +7,7 @@ const Cart = () => {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const navigate = useNavigate();
+  const { handleSubmit, setValue } = useForm();
 
   useEffect(() => {
     fetch('http://localhost:3001/products')
@@ -41,8 +43,7 @@ const Cart = () => {
     if (cart.length === 0) {
       alert('Ваша корзина пуста!');
       return;
-    }
-    else{
+    } else {
       navigate('/order');
     }
   };

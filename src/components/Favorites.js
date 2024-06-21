@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
 import '../components/styles/Favorites.css';
 import { useNavigate } from 'react-router-dom';
 
 const Favorites = () => {
   const [products, setProducts] = useState([]);
-  const { handleSubmit, formState } = useForm();
   const [cart, setCart] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const navigate = useNavigate();

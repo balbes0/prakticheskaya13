@@ -73,7 +73,7 @@ const Order = () => {
       message: message
     };
 
-    emailjs.send('service_r56fufz', 'template_q3dkksz', templateParams, '3nR5TcDhXkrpHfHFH')
+    emailjs.send('service_qmxyzod', 'template_ump07zs', templateParams, '3nR5TcDhXkrpHfHFH')
       .then(
         (result) => {
           console.log('SUCCESS!', result.text);

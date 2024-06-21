@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import './styles/Catalog.css';
@@ -7,7 +7,7 @@ import './styles/Catalog.css';
 const Catalog = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const { handleSubmit, register } = useForm();
+  const { handleSubmit, control } = useForm();
   const [cart, setCart] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const navigate = useNavigate();
@@ -42,12 +42,11 @@ const Catalog = () => {
   };
 
   const onSubmit = (data) => {
-    // Фильтрация по названию продукта
     let filtered = products.filter(product => product.name.toLowerCase().includes(data.search.toLowerCase()));
 
     // Фильтрация по типу мяса
     if (data.meatType !== 'all') {
-      filtered = filtered.filter(product => product.meat.toLowerCase() === data.meatType.toLowerCase());
+      filtered = filtered.filter(product => product.meat.toLowerCase().includes(data.meatType.toLowerCase()));
     }
 
     // Фильтрация по категории
@@ -62,21 +61,37 @@ const Catalog = () => {
     <div>
       <h1>Каталог товаров</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <input type="text" placeholder="Поиск по названию" {...register('search')} />
-        <select {...register('meatType')}>
-          <option value="all">Все типы мяса</option>
-          <option value="говядина">Говядина</option>
-          <option value="свинина">Свинина</option>
-          <option value="курица">Курица</option>
-          {/* Добавьте другие типы мяса по мере необходимости */}
-        </select>
-        <select {...register('category')}>
-          <option value="all">Все категории</option>
-          <option value="а">Категория А</option>
-          <option value="б">Категория Б</option>
-          <option value="в">Категория В</option>
-          {/* Добавьте другие категории по мере необходимости */}
-        </select>
+        <Controller
+          name="search"
+          control={control}
+          render={({ field }) => <input type="text" placeholder="Поиск по названию" {...field} />}
+        />
+        <Controller
+          name="meatType"
+          control={control}
+          render={({ field }) => (
+            <select {...field}>
+              <option value="all">Все типы мяса</option>
+              <option value="говядина">Говядина</option>
+              <option value="свинина">Свинина</option>
+              <option value="курица">Курица</option>
+              {/* Добавьте другие типы мяса по мере необходимости */}
+            </select>
+          )}
+        />
+        <Controller
+          name="category"
+          control={control}
+          render={({ field }) => (
+            <select {...field}>
+              <option value="all">Все категории</option>
+              <option value="а">Категория А</option>
+              <option value="б">Категория Б</option>
+              <option value="в">Категория В</option>
+              {/* Добавьте другие категории по мере необходимости */}
+            </select>
+          )}
+        />
         <button type="submit">Применить фильтры</button>
       </form>
 

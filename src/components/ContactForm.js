@@ -16,7 +16,7 @@ const ContactForm = () => {
       return;
     }
 
-    emailjs.sendForm('service_r56fufz', 'template_q3dkksz', form.current, '3nR5TcDhXkrpHfHFH')
+    emailjs.sendForm('service_qmxyzod', 'template_ump07zs', form.current, '3nR5TcDhXkrpHfHFH')
       .then(
         (result) => {
           console.log('SUCCESS!', result.text);

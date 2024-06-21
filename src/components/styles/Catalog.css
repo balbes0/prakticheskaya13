@@ -91,3 +91,72 @@ form input, form select, form button {
 .product-card .action-button.addToFavorites:hover {
   background-color: #218838;
 }
+
+/* Мобильные устройства (до 600px) */
+@media (max-width: 600px) {
+  form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  form input, form select, form button {
+    margin: 10px 0;
+    width: 100%;
+  }
+
+  .products-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .product-card {
+    width: 100%;
+    margin: 10px 0;
+  }
+
+  .product-card .action-buttons {
+    flex-direction: column;
+  }
+
+  .product-card .action-button {
+    margin: 5px 0;
+  }
+}
+
+/* Планшеты (от 600px до 768px) */
+@media (min-width: 600px) and (max-width: 768px) {
+  form {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  form input, form select, form button {
+    margin: 5px;
+  }
+
+  .products-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .product-card {
+    width: 45%;
+    margin: 10px;
+  }
+}
+
+/* Настольные компьютеры (от 768px и выше) */
+@media (min-width: 768px) {
+  .product-card {
+    width: 250px;
+  }
+
+  .product-card .action-buttons {
+    flex-direction: row;
+  }
+
+  .product-card .action-button {
+    margin: 0;
+  }
+}
