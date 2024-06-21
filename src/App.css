@@ -1,0 +1,53 @@
+/* App.css */
+
+/* Основные стили */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #ffffff; /* Белый цвет фона */
+    color: #333; /* Цвет текста */
+    height: 100%;
+  }
+  
+  .App {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  header {
+    background-color: #28a745; /* Зеленый цвет фона для header */
+    color: #ffffff; /* Белый цвет текста для header */
+    padding: 10px 0;
+    text-align: center;
+  }
+  
+  nav {
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  nav a {
+    color: #ffffff; /* Белый цвет ссылок в навигации */
+    text-decoration: none;
+    padding: 10px;
+  }
+  
+  nav a:hover {
+    text-decoration: underline;
+  }
+  
+  main {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  footer {
+    background-color: #28a745; /* Зеленый цвет фона для footer */
+    color: #ffffff; /* Белый цвет текста для footer */
+    text-align: center;
+    padding: 10px 0;
+    width: 100%;
+  }
+  
