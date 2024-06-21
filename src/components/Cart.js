@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../components/Cart.css';
+import '../components/styles/Cart.css';
 import { useNavigate } from 'react-router-dom';
 
 const Cart = () => {

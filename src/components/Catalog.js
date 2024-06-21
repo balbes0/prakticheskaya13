@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import './Catalog.css'; // Импортируем стили
+import { motion } from 'framer-motion';
+import './styles/Catalog.css';
 
 const Catalog = () => {
   const [products, setProducts] = useState([]);
@@ -81,7 +82,12 @@ const Catalog = () => {
 
       <div className="products-container">
         {filteredProducts.map(product => (
-          <div key={product.id} className="product-card">
+          <motion.div
+            key={product.id}
+            className="product-card"
+            whileHover={{ scale: 1.05, boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}
+            whileTap={{ scale: 0.95 }}
+          >
             <img src={product.img} alt={product.name} />
             <h3 onClick={() => goToProductInfo(product.id)}>{product.name}</h3>
             <p>Тип мяса: {product.meat}</p>
@@ -94,7 +100,7 @@ const Catalog = () => {
                 {favorites.includes(product.id) ? 'Убрать из избранного' : 'Добавить в избранное'}
               </button>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>

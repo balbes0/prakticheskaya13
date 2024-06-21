@@ -1,12 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import '../components/Order.css';
+import React, { useEffect, useState, useRef } from 'react';
+import emailjs from '@emailjs/browser';
+import { motion, AnimatePresence } from 'framer-motion';
+import ReCAPTCHA from 'react-google-recaptcha';
+import '../components/styles/Order.css';
 import { useNavigate } from 'react-router-dom';
 
 const Order = () => {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
+  const [captchaValue, setCaptchaValue] = useState(null);
+  const [isOrdering, setIsOrdering] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false); // State для успешного заказа
   const navigate = useNavigate();
+  const form = useRef();
 
   useEffect(() => {
     fetch('http://localhost:3001/products')
@@ -25,6 +32,10 @@ const Order = () => {
     return JSON.parse(localStorage.getItem('cart')) || [];
   };
 
+  const onCaptchaChange = (value) => {
+    setCaptchaValue(value);
+  };
+
   const placeOrder = (event) => {
     event.preventDefault();
     const fullname = event.target.fullname.value;
@@ -36,14 +47,57 @@ const Order = () => {
       return;
     }
 
-    // Здесь обычно происходит отправка заказа на сервер
+    if (!captchaValue) {
+      alert('Пожалуйста, подтвердите, что вы не робот.');
+      return;
+    }
 
-    // Очищаем корзину после оформления заказа
-    localStorage.removeItem('cart');
-    alert('Ваш заказ успешно оформлен!');
+    // Запускаем анимацию перед отправкой заказа
+    setIsOrdering(true);
 
-    // Переход на главную страницу после оформления заказа
-    navigate('/');
+    // Формируем сообщение для отправки по почте
+    const orderDetails = products.map(product => `${product.name}: ${product.price} рублей`).join('\n');
+    const message = `
+      ФИО: ${fullname}
+      Email: ${email}
+      Адрес: ${address}
+      Заказ:
+      ${orderDetails}
+      Общая сумма: ${total} рублей
+    `;
+
+    // Отправка письма с использованием EmailJS
+    const templateParams = {
+      user_name: fullname,
+      user_email: email,
+      message: message
+    };
+
+    emailjs.send('service_r56fufz', 'template_q3dkksz', templateParams, '3nR5TcDhXkrpHfHFH')
+      .then(
+        (result) => {
+          console.log('SUCCESS!', result.text);
+          setIsSuccess(true); // Показываем галочку при успешном заказе
+
+          // По окончании отправки заказа завершаем анимацию
+          setIsOrdering(false);
+
+          // Очищаем корзину после оформления заказа
+          localStorage.removeItem('cart');
+
+          // Переход на главную страницу через 2 секунды после успешного заказа
+          setTimeout(() => {
+            navigate('/');
+          }, 2000);
+        },
+        (error) => {
+          console.log('FAILED...', error.text);
+          alert('Произошла ошибка при отправке заказа. Пожалуйста, попробуйте снова.');
+
+          // По окончании отправки заказа завершаем анимацию
+          setIsOrdering(false);
+        },
+      );
   };
 
   return (
@@ -69,7 +123,7 @@ const Order = () => {
       </div>
       <div className="order-form">
         <h2>Оформление заказа</h2>
-        <form id="order-form" onSubmit={placeOrder}>
+        <form ref={form} id="order-form" onSubmit={placeOrder}>
           <div className="form-group">
             <label htmlFor="fullname">ФИО</label>
             <input type="text" id="fullname" name="fullname" required />
@@ -80,11 +134,38 @@ const Order = () => {
           </div>
           <div className="form-group">
             <label htmlFor="address">Адрес проживания</label>
-            <input id="address" name="address" rows="3" required></input>
+            <input id="address" name="address" required />
           </div>
+          <motion.button
+            type="submit"
+            className="place-order-button"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {isOrdering ? 'Отправка...' : 'Заказать'}
+          </motion.button>
         </form>
       </div>
-      <button type="submit" className="place-order-button">Заказать</button>
+      <ReCAPTCHA
+        sitekey="6Ld6Z_4pAAAAAKV02nAru6Ztq-XYPBB8SD_-RaBx"
+        onChange={onCaptchaChange}
+      />
+      <AnimatePresence>
+        {isSuccess && (
+          <motion.div
+            className="success-checkmark"
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            ✓
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

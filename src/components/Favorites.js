@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import '../components/Favorites.css';
+import '../components/styles/Favorites.css';
+import { useNavigate } from 'react-router-dom';
 
 const Favorites = () => {
   const [products, setProducts] = useState([]);
   const { handleSubmit, formState } = useForm();
   const [cart, setCart] = useState([]);
   const [favorites, setFavorites] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch('http://localhost:3001/products')
@@ -38,6 +40,10 @@ const Favorites = () => {
     return JSON.parse(localStorage.getItem('favorites')) || [];
   };
 
+  const goToProductInfo = (id) => {
+    navigate(`/productinfo/${id}`);
+  };
+
   return (
     <div>
       <h1>Избранное</h1>
@@ -48,7 +54,7 @@ const Favorites = () => {
           products.map(product => (
             <div key={product.id} className="product-card">
               <img src={product.img} alt={product.name} />
-              <h3>{product.name}</h3>
+              <h3 onClick={() => goToProductInfo(product.id)}>{product.name}</h3>
               <p>Тип мяса: {product.meat}</p>
               <p>Цена: {product.price} рублей</p>
               <div className="action-buttons">
